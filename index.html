@@ -37,23 +37,21 @@
         .kanban-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
         .column { display: flex; flex-direction: column; gap: 8px; min-height: 500px; padding-bottom: 20px; }
         .column-header { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; padding: 4px 0; }
-        .column-badge { background: var(--hover-color); padding: 2px 6px; border-radius: 10px; font-size: 12px; color: var(--text-muted); }
+        .column-badge { background: var(--hover-color); padding: 2px 6px; border-radius: 10px; font-size: 12px; color: var(--text-muted); margin-left: 6px; }
         
-        .task-list { display: flex; flex-direction: column; gap: 8px; min-height: 100px; border: 1px dashed transparent; border-radius: 6px; }
+        .task-list { display: flex; flex-direction: column; gap: 8px; min-height: 100px; }
         .task-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; cursor: pointer; user-select: none; }
         .task-card:hover { border-color: #d3d1cb; }
         .task-title { font-size: 14px; font-weight: 500; }
         .task-meta { font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; }
-        .task-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-        .tag { padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: 500; background: #e3e2e0; color: #37352f; }
         
-        .btn-add-task { background: transparent; border: none; color: var(--text-muted); padding: 6px; text-align: left; font-size: 14px; cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+        .btn-add-task { background: transparent; border: none; color: var(--text-muted); padding: 6px; text-align: left; font-size: 14px; cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 6px; margin-top: 4px; width: 100%; }
         .btn-add-task:hover { background: var(--hover-color); color: var(--text-color); }
         
-        /* Notion-style Side Peek Drawer Interface */
+        /* Notion Side Peek Drawer */
         .peek-drawer { position: absolute; right: -420px; top: 45px; bottom: 0; width: 420px; background: #ffffff; border-left: 1px solid var(--border-color); box-shadow: rgba(15, 15, 15, 0.08) -4px 0px 24px; display: flex; flex-direction: column; padding: 24px; transition: right 0.2s cubic-bezier(0.4, 0, 0.2, 1); z-index: 200; }
         .peek-drawer.open { right: 0; }
-        .peek-close { cursor: pointer; color: var(--text-muted); align-self: flex-start; margin-bottom: 20px; font-size: 14px; display: flex; align-items: center; gap: 4px; }
+        .peek-close { cursor: pointer; color: var(--text-muted); align-self: flex-start; margin-bottom: 20px; font-size: 14px; }
         .peek-close:hover { color: var(--text-color); }
         .peek-title { font-size: 28px; font-weight: 700; border: none; outline: none; width: 100%; margin-bottom: 20px; color: var(--text-color); }
         .peek-property { display: grid; grid-template-columns: 100px 1fr; gap: 12px; margin-bottom: 12px; font-size: 14px; align-items: center; }
@@ -62,13 +60,10 @@
         .property-select:hover, .property-input:hover, .property-select:focus, .property-input:focus { background: var(--hover-color); }
         .peek-desc { flex-grow: 1; margin-top: 20px; border: none; outline: none; resize: none; font-size: 14px; line-height: 1.6; border-top: 1px solid var(--border-color); padding-top: 20px; color: var(--text-color); }
         
-        /* AI Panel Interface Drawer */
+        /* AI Assistant Drawer */
         .ai-drawer { position: absolute; left: -340px; top: 45px; bottom: 0; width: 340px; background: #ffffff; border-right: 1px solid var(--border-color); box-shadow: rgba(15, 15, 15, 0.05) 4px 0px 12px; display: flex; flex-direction: column; padding: 16px; transition: left 0.25s ease; z-index: 100; }
         .ai-drawer.open { left: 0; }
         .ai-header { font-size: 14px; font-weight: 600; color: var(--accent-color); display: flex; justify-content: space-between; margin-bottom: 16px; }
-        .ai-actions { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-        .btn-ai { background: transparent; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 13px; text-align: left; }
-        .btn-ai:hover { background-color: var(--hover-color); }
         .ai-output { flex-grow: 1; border: 1px solid var(--border-color); border-radius: 5px; padding: 12px; font-size: 13px; overflow-y: auto; background: #fafafa; }
         .btn-ai-trigger { background: var(--accent-color); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; }
         .sidebar-footer { margin-top: auto; padding: 14px; border-top: 1px solid var(--border-color); }
@@ -95,30 +90,43 @@
         <div class="board-container">
             <div class="board-header-icon">✅</div>
             <h1 class="board-title">Tasks</h1>
-            <p class="board-desc">Dynamic task tracking layout framework. Click any card to edit parameters inline.</p>
+            <p class="board-desc">Your Notion workspace dashboard. Click any card to edit details instantly.</p>
             
             <div class="kanban-grid">
-                <!-- Columns -->
                 <div class="column">
-                    <div class="column-header"><span>Not started</span><span class="column-badge" id="badge-not-started">0</span></div>
+                    <div class="column-header">
+                        <span style="display:inline-block; width:8px; height:8px; background:#eb5757; border-radius:50%; margin-right: 6px;"></span>
+                        <span>Not started</span>
+                        <span class="column-badge" id="badge-not-started">0</span>
+                    </div>
                     <div class="task-list" id="list-not-started"></div>
                     <button class="btn-add-task" onclick="createNewTask('not-started')">+ New task</button>
                 </div>
                 <div class="column">
-                    <div class="column-header"><span>In progress</span><span class="column-badge" id="badge-in-progress">0</span></div>
+                    <div class="column-header">
+                        <span style="display:inline-block; width:8px; height:8px; background:#f2c94c; border-radius:50%; margin-right: 6px;"></span>
+                        <span>In progress</span>
+                        <span class="column-badge" id="badge-in-progress">0</span>
+                    </div>
                     <div class="task-list" id="list-in-progress"></div>
                     <button class="btn-add-task" onclick="createNewTask('in-progress')">+ New task</button>
                 </div>
                 <div class="column">
-                    <div class="column-header"><span>Done</span><span class="column-badge" id="badge-done">0</span></div>
+                    <div class="column-header">
+                        <span style="display:inline-block; width:8px; height:8px; background:#27ae60; border-radius:50%; margin-right: 6px;"></span>
+                        <span>Done</span>
+                        <span class="column-badge" id="badge-done">0</span>
+                    </div>
                     <div class="task-list" id="list-done"></div>
                     <button class="btn-add-task" onclick="createNewTask('done')">+ New task</button>
                 </div>
             </div>
         </div>
         
-        <!-- Notion-style Side Peek Drawer Interface -->
         <div class="peek-drawer" id="peekDrawer">
             <div class="peek-close" onclick="closePeek()">✕ Close Page</div>
             <input type="text" id="peekTitleInput" class="peek-title" placeholder="Untitled task">
             
+            <div class="peek-property">
+
+                
