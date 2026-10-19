@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks · Tasknote</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --sidebar-bg: #fbfbfa;
+            --text-color: #37352f;
+            --text-muted: #7c7b77;
+            --border-color: #e9e9e6;
+            --hover-color: #efeee8;
+            --hover-active: #e7e5e0;
+            --accent-color: #2383e2;
+            --card-bg: #ffffff;
+            --shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling matching original structure */
+        .sidebar {
+            width: 240px;
+            min-width: 240px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 10px 0;
+            user-select: none;
+        }
+
+        .workspace-title {
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .workspace-avatar {
+            width: 18px;
+            height: 18px;
+            background: #e3e8f8;
+            color: #37352f;
+            border-radius: 3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .nav-item {
+            padding: 6px 14px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--hover-color);
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            padding: 16px 14px 6px 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .api-input {
+            width: 100%;
+            padding: 6px 8px;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            outline: none;
+            margin-top: 5px;
+        }
+
+        /* Main Workspace Content Area */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-x: auto;
+            background: var(--bg-color);
+            position: relative;
+        }
+
+        .header-bar {
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-size: 14px;
+            border-bottom: 1px solid transparent;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-active {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .board-container {
+            flex-grow: 1;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            overflow-y: auto;
+        }
+
+        .board-header-icon {
+            font-size: 64px;
+            margin-bottom: 12px;
+        }
+
+        .board-title {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .board-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        /* Kanban Board Grid Structure Layout */
+        .kanban-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            align-items: start;
+        }
+
+        .column {
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .column-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 4px 0;
+            margin-bottom: 4px;
+        }
+
+        .column-badge {
+            background: var(--hover-color);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .badge-ns { background: #f1f1ef; color: #37352f; }
+        .badge-ip { background: #e3e2e0; color: #37352f; }
+        .badge-d { background: #e3e2e0; color: #37352f; }
+
+        /* Custom Task Note Card styling blocks */
+        .task-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .task-card:hover {
+            border-color: #d3d1cb;
+        }
+
+        .task-title {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .task-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .task-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .tag {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .tag-high { background: #ffe2dd; color: #5d1715; }
+        .tag-medium { background: #fdecc8; color: #4d3800; }
+        .tag-low { background: #e3e2e0; color: #37352f; }
+        .tag-bug { background: #ffe2dd; color: #5d1715; }
+        .tag-eng { background: #e8deee; color: #482e5b; }
+        .tag-prod { background: #e3e8f8; color: #1a3d54; }
+        .tag-design { background: #e3f6ed; color: #1c4d37; }
+
+        /* Integrated AI Drawer Slide Panel Overlay */
+        .ai-drawer {
+            position: absolute;
+            right: -340px;
+            top: 45px;
+            bottom: 0;
+            width: 340px;
+            background: #ffffff;
+            border-left: 1px solid var(--border-color);
+            box-shadow: rgba(15, 15, 15, 0.05) -4px 0px 12px;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            transition: right 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .ai-drawer.open {
+            right: 0;
+        }
+
+        .ai-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .ai-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .btn-ai {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: left;
+            color: var(--text-color);
+        }
+
+        .btn-ai:hover {
+            background-color: var(--hover-color);
+        }
+
+        .ai-prompt-box {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .prompt-input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .btn-send {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .ai-output {
+            flex-grow: 1;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 13px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            background: #fafafa;
+        }
+
+        .btn-ai-trigger {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Layout Component -->
+    <div class="sidebar">
+        <div class="workspace-title">
+            <div class="workspace-avatar">S</div>
+            <span>S Shahim's Workspace</span>
+        </div>
+        
+        <div class="nav-item">🔍 Search <span style="margin-left:auto; font-size:11px; color:var(--text-muted);">⌘K</span></div>
+        <div class="nav-item">🌓 Dark mode</div>
+
+        <div class="nav-section-title">Private</div>
+        <div class="nav-item active">✅ Tasks</div>
+
