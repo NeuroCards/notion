@@ -12,149 +12,113 @@
             --text-muted: #7c7b77;
             --border-color: #e9e9e6;
             --hover-color: #efeee8;
-            --accent-color: #27ae60;
-            --ai-accent: #2383e2;
+            --hover-active: #e7e5e0;
+            --accent-color: #2383e2;
             --card-bg: #ffffff;
             --shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { display: flex; height: 100vh; background-color: var(--bg-color); color: var(--text-color); overflow: hidden; }
-
-        /* Sidebar Styling */
-        .sidebar {
-            width: 240px;
-            min-width: 240px;
-            background-color: var(--sidebar-bg);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            padding: 10px 0;
-            user-select: none;
-        }
-
+        
+        .sidebar { width: 240px; min-width: 240px; background-color: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 10px 0; user-select: none; }
         .workspace-title { padding: 6px 14px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-        .workspace-avatar { width: 18px; height: 18px; background: #e3e8f8; color: #37352f; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
-        .nav-item { padding: 6px 14px; font-size: 14px; display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color); }
+        .workspace-avatar { width: 18px; height: 18px; background: #e3e8f8; border-radius: 3px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
+        .nav-item { padding: 6px 14px; font-size: 14px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
         .nav-item:hover, .nav-item.active { background-color: var(--hover-color); }
         .nav-section-title { font-size: 11px; font-weight: 600; color: var(--text-muted); padding: 16px 14px 6px 14px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .sidebar-footer { margin-top: auto; padding: 14px; border-top: 1px solid var(--border-color); }
-        .api-input { width: 100%; padding: 6px 8px; font-size: 12px; border: 1px solid var(--border-color); border-radius: 4px; outline: none; margin-top: 5px; }
-
-        /* Main View Canvas */
-        .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        
+        .main-content { flex-grow: 1; display: flex; flex-direction: column; background: var(--bg-color); position: relative; overflow: hidden; }
         .header-bar { height: 45px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 14px; border-bottom: 1px solid var(--border-color); }
         .breadcrumb { display: flex; align-items: center; gap: 6px; color: var(--text-muted); }
-        .breadcrumb-active { color: var(--text-color); font-weight: 500; }
-
         .board-container { flex-grow: 1; padding: 40px; overflow-y: auto; }
         .board-header-icon { font-size: 64px; margin-bottom: 12px; }
         .board-title { font-size: 40px; font-weight: 700; margin-bottom: 8px; }
-        .board-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
-
-        /* Kanban Board Columns */
+        .board-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+        
         .kanban-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
-        .column { display: flex; flex-direction: column; gap: 8px; }
-        .column-header { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; padding: 4px 0; margin-bottom: 4px; }
-        .column-badge { background: var(--hover-color); padding: 2px 6px; border-radius: 10px; font-size: 12px; color: var(--text-muted); margin-left: 4px; }
-
-        /* Task Cards */
-        .task-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; cursor: pointer; }
+        .column { display: flex; flex-direction: column; gap: 8px; min-height: 500px; padding-bottom: 20px; }
+        .column-header { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; padding: 4px 0; }
+        .column-badge { background: var(--hover-color); padding: 2px 6px; border-radius: 10px; font-size: 12px; color: var(--text-muted); }
+        
+        .task-list { display: flex; flex-direction: column; gap: 8px; min-height: 50px; }
+        .task-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; cursor: pointer; user-select: none; }
         .task-card:hover { border-color: #d3d1cb; }
-        .task-title { font-size: 14px; font-weight: 500; line-height: 1.4; }
-        .task-meta { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--text-muted); }
-        .task-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-        .tag { padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: 500; }
+        .task-title { font-size: 14px; font-weight: 500; }
+        .task-meta { font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; }
+        .task-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+        .tag { padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: 500; background: #e3e2e0; color: #37352f; }
         
-        .tag-high { background: #ffe2dd; color: #5d1715; }
-        .tag-medium { background: #fdecc8; color: #4d3800; }
-        .tag-low { background: #e3e2e0; color: #37352f; }
-        .tag-bug { background: #ffe2dd; color: #5d1715; }
-        .tag-eng { background: #e8deee; color: #482e5b; }
-        .tag-prod { background: #e3e8f8; color: #1a3d54; }
-        .tag-design { background: #e3f6ed; color: #1c4d37; }
-
-        /* Integrated AI Drawer Panel Overlay */
-        .ai-drawer { position: absolute; right: -340px; top: 45px; bottom: 0; width: 340px; background: #ffffff; border-left: 1px solid var(--border-color); box-shadow: rgba(15, 15, 15, 0.05) -4px 0px 12px; display: flex; flex-direction: column; padding: 16px; transition: right 0.25s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; }
-        .ai-drawer.open { right: 0; }
-        .ai-header { font-size: 14px; font-weight: 600; color: var(--ai-accent); display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .btn-add-task { background: transparent; border: none; color: var(--text-muted); padding: 6px; text-align: left; font-size: 14px; cursor: pointer; border-radius: 4px; display: flex; align-items: center; gap: 6px; }
+        .btn-add-task:hover { background: var(--hover-color); color: var(--text-color); }
+        
+        /* Notion Side Peek Drawer Styling */
+        .peek-drawer { position: absolute; right: -420px; top: 45px; bottom: 0; width: 420px; background: #ffffff; border-left: 1px solid var(--border-color); box-shadow: rgba(15, 15, 15, 0.08) -4px 0px 24px; display: flex; flex-direction: column; padding: 24px; transition: right 0.2s ease; z-index: 200; }
+        .peek-drawer.open { right: 0; }
+        .peek-close { cursor: pointer; color: var(--text-muted); align-self: flex-start; margin-bottom: 20px; font-size: 18px; }
+        .peek-title { font-size: 28px; font-weight: 700; border: none; outline: none; width: 100%; margin-bottom: 20px; color: var(--text-color); }
+        .peek-property { display: grid; grid-template-columns: 100px 1fr; gap: 12px; margin-bottom: 12px; font-size: 14px; align-items: center; }
+        .property-label { color: var(--text-muted); }
+        .property-select, .property-input { width: 100%; padding: 4px 6px; border: 1px solid transparent; border-radius: 4px; outline: none; background: transparent; font-size: 14px; color: var(--text-color); }
+        .property-select:hover, .property-input:hover, .property-select:focus, .property-input:focus { background: var(--hover-color); }
+        .peek-desc { flex-grow: 1; margin-top: 20px; border: none; outline: none; resize: none; font-size: 14px; line-height: 1.6; border-top: 1px solid var(--border-color); padding-top: 20px; color: var(--text-color); }
+        
+        .ai-drawer { position: absolute; left: -340px; top: 45px; bottom: 0; width: 340px; background: #ffffff; border-right: 1px solid var(--border-color); box-shadow: rgba(15, 15, 15, 0.05) 4px 0px 12px; display: flex; flex-direction: column; padding: 16px; transition: left 0.25s ease; z-index: 100; }
+        .ai-drawer.open { left: 0; }
+        .ai-header { font-size: 14px; font-weight: 600; color: var(--accent-color); display: flex; justify-content: space-between; margin-bottom: 16px; }
         .ai-actions { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-        .btn-ai { background: transparent; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 13px; text-align: left; color: var(--text-color); }
+        .btn-ai { background: transparent; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 13px; text-align: left; }
         .btn-ai:hover { background-color: var(--hover-color); }
-        
-        .ai-prompt-box { display: flex; gap: 6px; margin-bottom: 12px; }
-        .prompt-input { flex-grow: 1; padding: 8px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 13px; outline: none; }
-        .btn-send { background-color: var(--ai-accent); color: white; border: none; padding: 0 14px; border-radius: 5px; cursor: pointer; font-size: 13px; }
-        .ai-output { flex-grow: 1; border: 1px solid var(--border-color); border-radius: 5px; padding: 12px; font-size: 13px; overflow-y: auto; white-space: pre-wrap; line-height: 1.5; background: #fafafa; }
-        .btn-ai-trigger { background: var(--ai-accent); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; }
+        .ai-output { flex-grow: 1; border: 1px solid var(--border-color); border-radius: 5px; padding: 12px; font-size: 13px; overflow-y: auto; background: #fafafa; }
+        .btn-ai-trigger { background: var(--accent-color); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; }
+        .sidebar-footer { margin-top: auto; padding: 14px; border-top: 1px solid var(--border-color); }
+        .api-input { width: 100%; padding: 6px; font-size: 12px; border: 1px solid var(--border-color); border-radius: 4px; margin-top: 5px; }
     </style>
 </head>
 <body>
-
-    <!-- Sidebar Layout Component -->
     <div class="sidebar">
-        <div class="workspace-title">
-            <div class="workspace-avatar">S</div>
-            <span>S Shahim's Workspace</span>
-        </div>
-        <div class="nav-item">🔍 Search <span style="margin-left:auto; font-size:11px; color:var(--text-muted);">⌘K</span></div>
+        <div class="workspace-title"><div class="workspace-avatar">S</div><span>S Shahim's Workspace</span></div>
+        <div class="nav-item">🔍 Search</div>
         <div class="nav-item">🌓 Dark mode</div>
         <div class="nav-section-title">Private</div>
         <div class="nav-item active">✅ Tasks</div>
-        
-        <div class="nav-section-title">Recently edited</div>
-        <div class="nav-item" style="font-size:13px; color:var(--text-muted);">🗺 Draft Q4 product roadmap</div>
-        <div class="nav-item" style="font-size:13px; color:var(--text-muted);">✨ Redesign onboarding checklist</div>
-        
         <div class="sidebar-footer">
-            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px;">GEMINI API CONFIG</div>
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">GEMINI API KEY</div>
             <input type="password" id="apiKeyInput" class="api-input" placeholder="Paste Gemini key here...">
         </div>
     </div>
-
-    <!-- Content Workspace -->
     <div class="main-content">
         <div class="header-bar">
-            <div class="breadcrumb"><span>Private</span> / <span class="breadcrumb-active">✅ Tasks</span></div>
+            <div class="breadcrumb"><span>Private</span> / <span style="color:var(--text-color); font-weight:500;">✅ Tasks</span></div>
             <button class="btn-ai-trigger" onclick="toggleAiDrawer()">✨ Ask Gemini AI</button>
         </div>
-
         <div class="board-container">
             <div class="board-header-icon">✅</div>
             <h1 class="board-title">Tasks</h1>
-            <p class="board-desc">Stay organized with tasks, your way. Drag cards between columns, click any property to edit it, and open a task for notes.</p>
-
+            <p class="board-desc">Dynamic task tracking layout framework. Click any card to edit parameters inline.</p>
+            
             <div class="kanban-grid">
-                <!-- Not Started Column -->
+                <!-- Columns -->
                 <div class="column">
-                    <div class="column-header">
-                        <span style="display:inline-block; width:8px; height:8px; background:#eb5757; border-radius:50%;"></span>
-                        <span>Not started</span><span class="column-badge">3</span>
-                    </div>
-
-                    <div class="task-card">
-                        <div class="task-title">🐛 Fix login redirect loop on Safari</div>
-                        <div class="task-meta"><div>👤 Leo Park</div><div>📅 October 20, 2026</div></div>
-                        <div class="task-tags"><span class="tag tag-high">High</span><span class="tag tag-bug">Bug</span><span class="tag tag-eng">Engineering</span></div>
-                    </div>
-
-                    <div class="task-card">
-                        <div class="task-title">📝 Write release notes for v2.4</div>
-                        <div class="task-meta"><div>👤 S Shahim Ahmed</div><div>📅 October 28, 2026</div></div>
-                        <div class="task-tags"><span class="tag tag-low">Low</span><span class="tag tag-prod">Marketing</span></div>
-                    </div>
-
-                    <div class="task-card">
-                        <div class="task-title">🎙 Interview 5 power users</div>
-                        <div class="task-meta"><div>👤 Maya Chen</div><div>📅 October 31, 2026</div></div>
-                        <div class="task-tags"><span class="tag tag-medium">Medium</span><span class="tag tag-prod">Research</span></div>
-                    </div>
+                    <div class="column-header"><span>Not started</span><span class="column-badge" id="badge-not-started">0</span></div>
+                    <div class="task-list" id="list-not-started" ondragover="allowDrop(event)" ondrop="drop(event, 'not-started')"></div>
+                    <button class="btn-add-task" onclick="createNewTask('not-started')">+ New task</button>
                 </div>
-
-                <!-- In Progress Column -->
                 <div class="column">
-                    <div class="column-header">
-
-
-                    
+                    <div class="column-header"><span>In progress</span><span class="column-badge" id="badge-in-progress">0</span></div>
+                    <div class="task-list" id="list-in-progress" ondragover="allowDrop(event)" ondrop="drop(event, 'in-progress')"></div>
+                    <button class="btn-add-task" onclick="createNewTask('in-progress')">+ New task</button>
+                </div>
+                <div class="column">
+                    <div class="column-header"><span>Done</span><span class="column-badge" id="badge-done">0</span></div>
+                    <div class="task-list" id="list-done" ondragover="allowDrop(event)" ondrop="drop(event, 'done')"></div>
+                    <button class="btn-add-task" onclick="createNewTask('done')">+ New task</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notion-style Side Peek Drawer Interface -->
+        <div class="peek-drawer" id="peekDrawer">
+            <div class="peek-close" onclick="closePeek()">✕ Close Page</div>
+            <input type="text" id="peekTitleInput" class="peek-title" placeholder="Untitled task">
+            
+            <div class="peek-property">
